@@ -13,19 +13,16 @@ const EditForm = () => {
   });
   const [selectedValue, setSelectedValue] = useState('');
 
-  const pageChanged = useCallback((event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-
-    setSelectedValue(event.target.value);
-    const {name, value} = event.target;
+  const pageChanged = useCallback((e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
       setNewPage(prevState => ({
         ...prevState,
-        [name]: value,
+        [e.target.name]: e.target.value,
       }));
   }, []);
 
-  // const handleSelectChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedValue(event.target.value);
-  // };
+  const handleSelectChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedValue(event.target.value);
+  };
 
   const fetchPage = useCallback( async() => {
     try {
@@ -64,7 +61,7 @@ const EditForm = () => {
     <form onSubmit={onFormSubmit}>
       <div className="form-group">
         <label htmlFor="PageName" className="me-3">Select page: </label>
-        <select className="form-control" id="pageName" name="pageName"  required defaultValue={selectedValue} onChange={pageChanged}>
+        <select className="form-control" id="pageName" name="pageName"  required value={selectedValue} onChange={handleSelectChange}>
           <option value=""> </option>
           <option value='home'>Home</option>
           <option value='about'>About</option>
@@ -78,6 +75,7 @@ const EditForm = () => {
           id="title" type="text" name="title" required
           className="form-control"
           value={newPage?.title}
+          onChange={pageChanged}
         />
       </div>
       <div className="form-group mt-3">
@@ -86,6 +84,7 @@ const EditForm = () => {
           id="content" type="text" name="content" required
           className="form-control"
           value={newPage?.content}
+          onChange={pageChanged}
         />
       </div>
       <button disabled={loading} type="submit" className="btn btn-primary m-3">
